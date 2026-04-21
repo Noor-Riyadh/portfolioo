@@ -65,9 +65,10 @@ npm run build
 npm run preview
 ```
 
----
 
 ## 📁 Project Structure
+
+```
 src/
 ├── components/
 │   ├── Navbar.jsx       # Fixed navigation with scroll effect
@@ -81,8 +82,7 @@ src/
 ├── App.jsx
 ├── main.jsx
 └── index.css            # Global styles + CSS variables
-
----
+```
 
 ## 📸 Sections
 
