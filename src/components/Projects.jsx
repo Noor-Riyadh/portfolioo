@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, GitBranch } from "lucide-react";
-
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 const tabs = ["All", "Web Dev", "Design", "Branding"];
@@ -57,14 +56,18 @@ const projects = [
   },
 ];
 
-function ProjectCard({ project }) {
+function ProjectCard({ project, index }) {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, scale: 0.92 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.88 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20, scale: 0.95 }}
+      transition={{
+        duration: 0.5,
+        delay: index * 0.1,
+        ease: [0.22, 1, 0.36, 1],
+      }}
       whileHover={{ y: -6 }}
       className="group glass border border-white/8 rounded-2xl overflow-hidden hover:border-purple-500/30 transition-colors duration-300"
     >
@@ -75,7 +78,10 @@ function ProjectCard({ project }) {
           background: `linear-gradient(135deg, ${project.color}33, ${project.color}11)`,
         }}
       >
-        <div
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.4, delay: index * 0.1 + 0.2 }}
           className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl font-display font-black text-white/20 select-none"
           style={{
             background: `${project.color}22`,
@@ -83,36 +89,52 @@ function ProjectCard({ project }) {
           }}
         >
           {project.title[0]}
-        </div>
+        </motion.div>
+
         {/* Hover overlay */}
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-          <button className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors"
+          >
             <ExternalLink size={16} className="text-white" />
-          </button>
-          <button className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors">
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors"
+          >
             <GitBranch size={16} className="text-white" />
-          </button>
+          </motion.button>
         </div>
+
         {/* Tag */}
         <span
           className="absolute top-3 right-3 text-[11px] font-body font-medium px-2.5 py-1 rounded-full"
           style={{
             background: `${project.color}33`,
-            color: `${project.color}`,
+            color: project.color,
             border: `1px solid ${project.color}44`,
           }}
         >
           {project.tag}
         </span>
       </div>
-      <div className="p-5">
+
+      <motion.div
+        className="p-5"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, delay: index * 0.1 + 0.3 }}
+      >
         <h3 className="font-display font-bold text-lg text-white mb-1.5">
           {project.title}
         </h3>
         <p className="font-body text-sm text-white/45 leading-relaxed">
           {project.desc}
         </p>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
@@ -135,7 +157,7 @@ export default function Projects() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-violet-900/8 blur-3xl pointer-events-none" />
 
       <div className="relative z-10 max-w-6xl mx-auto px-6">
-        {/* Header */}
+        {/* Header — fades in on scroll */}
         <motion.div
           ref={ref}
           initial="hidden"
@@ -181,14 +203,14 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Grid */}
+        {/* Grid with fade-in per card */}
         <motion.div
           layout
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           <AnimatePresence mode="popLayout">
-            {filtered.map((p) => (
-              <ProjectCard key={p.id} project={p} />
+            {filtered.map((p, i) => (
+              <ProjectCard key={p.id} project={p} index={i} />
             ))}
           </AnimatePresence>
         </motion.div>

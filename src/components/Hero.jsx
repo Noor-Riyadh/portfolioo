@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 
+
 // Animated floating orb background
 function Orbs() {
   return (
@@ -28,6 +29,7 @@ function Orbs() {
             />
           </pattern>
         </defs>
+        
         <rect width="100%" height="100%" fill="url(#grid)" />
       </svg>
     </div>

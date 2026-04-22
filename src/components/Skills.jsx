@@ -1,4 +1,6 @@
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
 
 const skills = [
@@ -12,6 +14,7 @@ const skills = [
 
 const R = 52;
 const CIRC = 2 * Math.PI * R;
+const VISIBLE = 3; // how many circles visible at once
 
 function CircleSkill({ label, pct, color, delay }) {
   const dash = (pct / 100) * CIRC;
@@ -23,7 +26,7 @@ function CircleSkill({ label, pct, color, delay }) {
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -6 }}
-      className="group flex flex-col items-center gap-4"
+      className="group flex flex-col items-center gap-4 flex-shrink-0 w-44"
     >
       <div className="relative w-36 h-36">
         {/* Glow behind circle */}
@@ -62,7 +65,7 @@ function CircleSkill({ label, pct, color, delay }) {
           />
         </svg>
         {/* Center text */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
+        <div className="absolute inset-0 flex items-center justify-center z-20">
           <motion.span
             className="font-display text-2xl font-bold text-white"
             initial={{ opacity: 0 }}
@@ -83,6 +86,12 @@ function CircleSkill({ label, pct, color, delay }) {
 
 export default function Skills() {
   const { ref, controls, variants } = useScrollAnimation();
+  const [index, setIndex] = useState(0);
+
+  const maxIndex = skills.length - VISIBLE;
+
+  const prev = () => setIndex((i) => Math.max(i - 1, 0));
+  const next = () => setIndex((i) => Math.min(i + 1, maxIndex));
 
   return (
     <section
@@ -117,10 +126,52 @@ export default function Skills() {
           </p>
         </motion.div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8 justify-items-center">
-          {skills.map((s, i) => (
-            <CircleSkill key={s.label} {...s} delay={i * 0.1} />
+        {/* Slider */}
+        <div className="relative flex items-center justify-center gap-4">
+          {/* Prev button */}
+          <button
+            onClick={prev}
+            disabled={index === 0}
+            className="w-10 h-10 rounded-full glass border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-purple-500/40 transition-all disabled:opacity-20 disabled:cursor-not-allowed flex-shrink-0"
+          >
+            <ChevronLeft size={18} />
+          </button>
+
+          {/* Visible window */}
+          <div className="overflow-hidden w-full max-w-2xl">
+            <motion.div
+              className="flex gap-8"
+              animate={{ x: -index * (176 + 32) }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              {skills.map((s, i) => (
+                <CircleSkill key={s.label} {...s} delay={i * 0.1} />
+              ))}
+            </motion.div>
+          </div>
+
+          {/* Next button */}
+          <button
+            onClick={next}
+            disabled={index === maxIndex}
+            className="w-10 h-10 rounded-full glass border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:border-purple-500/40 transition-all disabled:opacity-20 disabled:cursor-not-allowed flex-shrink-0"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
+
+        {/* Dots */}
+        <div className="flex justify-center gap-2 mt-8">
+          {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              className={`rounded-full transition-all duration-300 ${
+                i === index
+                  ? "w-6 h-2 bg-primary"
+                  : "w-2 h-2 bg-white/20 hover:bg-white/40"
+              }`}
+            />
           ))}
         </div>
       </div>

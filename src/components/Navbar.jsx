@@ -34,7 +34,7 @@ export default function Navbar() {
         <ul className="hidden md:flex items-center gap-8">
           {links.map((l) => (
             <li key={l}>
-              {/* FIXED: Added missing <a> tag below */}
+              {}
               <a
                 href={`#${l.toLowerCase()}`}
                 className="text-sm text-white/60 hover:text-white transition-colors duration-200 font-body tracking-wide"
@@ -45,8 +45,8 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* CTA */}
-        {/* FIXED: Added missing <a> tag below */}
+        {}
+        {}
         <a
           href="#contact"
           className="hidden md:inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium bg-primary hover:bg-accent transition-colors duration-200 shadow-lg shadow-primary/30"
@@ -75,7 +75,7 @@ export default function Navbar() {
             <ul className="flex flex-col px-6 py-4 gap-4">
               {links.map((l) => (
                 <li key={l}>
-                  {/* FIXED: Added missing <a> tag below */}
+                  {}
                   <a
                     href={`#${l.toLowerCase()}`}
                     onClick={() => setOpen(false)}
@@ -86,7 +86,7 @@ export default function Navbar() {
                 </li>
               ))}
               <li>
-                {/* FIXED: Added missing <a> tag below */}
+                {}
                 <a
                   href="#contact"
                   onClick={() => setOpen(false)}
