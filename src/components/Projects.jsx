@@ -56,16 +56,100 @@ const projects = [
   },
 ];
 
+// function ProjectCard({ project, index }) {
+//   return (
+//     <motion.div
+//       layout
+//       initial={{ opacity: 0, y: 40 }}
+//       animate={{ opacity: 1, y: 0 }}
+//       exit={{ opacity: 0, y: 20, scale: 0.95 }}
+//       transition={{
+//         duration: 0.5,
+//         delay: index * 0.1,
+//         ease: [0.22, 1, 0.36, 1],
+//       }}
+//       whileHover={{ y: -6 }}
+//       className="group glass border border-white/8 rounded-2xl overflow-hidden hover:border-purple-500/30 transition-colors duration-300"
+//     >
+//       {/* Card image area */}
+//       <div
+//         className="relative h-44 flex items-center justify-center overflow-hidden"
+//         style={{
+//           background: `linear-gradient(135deg, ${project.color}33, ${project.color}11)`,
+//         }}
+//       >
+//         <motion.div
+//           initial={{ scale: 0.8, opacity: 0 }}
+//           animate={{ scale: 1, opacity: 1 }}
+//           transition={{ duration: 0.4, delay: index * 0.1 + 0.2 }}
+//           className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl font-display font-black text-white/20 select-none"
+//           style={{
+//             background: `${project.color}22`,
+//             border: `1px solid ${project.color}44`,
+//           }}
+//         >
+//           {project.title[0]}
+//         </motion.div>
+
+//         {/* Hover overlay */}
+//         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+//           <motion.button
+//             whileHover={{ scale: 1.1 }}
+//             whileTap={{ scale: 0.95 }}
+//             className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors"
+//           >
+//             <ExternalLink size={16} className="text-white" />
+//           </motion.button>
+//           <motion.button
+//             whileHover={{ scale: 1.1 }}
+//             whileTap={{ scale: 0.95 }}
+//             className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors"
+//           >
+//             <GitBranch size={16} className="text-white" />
+//           </motion.button>
+//         </div>
+
+//         {/* Tag */}
+//         <span
+//           className="absolute top-3 right-3 text-[11px] font-body font-medium px-2.5 py-1 rounded-full"
+//           style={{
+//             background: `${project.color}33`,
+//             color: project.color,
+//             border: `1px solid ${project.color}44`,
+//           }}
+//         >
+//           {project.tag}
+//         </span>
+//       </div>
+
+//       <motion.div
+//         className="p-5"
+//         initial={{ opacity: 0 }}
+//         animate={{ opacity: 1 }}
+//         transition={{ duration: 0.4, delay: index * 0.1 + 0.3 }}
+//       >
+//         <h3 className="font-display font-bold text-lg text-white mb-1.5">
+//           {project.title}
+//         </h3>
+//         <p className="font-body text-sm text-white/45 leading-relaxed">
+//           {project.desc}
+//         </p>
+//       </motion.div>
+//     </motion.div>
+//   );
+// }
+
 function ProjectCard({ project, index }) {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 20, scale: 0.95 }}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      viewport={{ once: true, margin: "-50px" }}
       transition={{
-        duration: 0.5,
-        delay: index * 0.1,
+        duration: 0.6,
+        delay: index * 0.15,
         ease: [0.22, 1, 0.36, 1],
       }}
       whileHover={{ y: -6 }}
@@ -78,10 +162,7 @@ function ProjectCard({ project, index }) {
           background: `linear-gradient(135deg, ${project.color}33, ${project.color}11)`,
         }}
       >
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.4, delay: index * 0.1 + 0.2 }}
+        <div
           className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl font-display font-black text-white/20 select-none"
           style={{
             background: `${project.color}22`,
@@ -89,7 +170,7 @@ function ProjectCard({ project, index }) {
           }}
         >
           {project.title[0]}
-        </motion.div>
+        </div>
 
         {/* Hover overlay */}
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
@@ -122,23 +203,17 @@ function ProjectCard({ project, index }) {
         </span>
       </div>
 
-      <motion.div
-        className="p-5"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: index * 0.1 + 0.3 }}
-      >
+      <div className="p-5">
         <h3 className="font-display font-bold text-lg text-white mb-1.5">
           {project.title}
         </h3>
         <p className="font-body text-sm text-white/45 leading-relaxed">
           {project.desc}
         </p>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
-
 export default function Projects() {
   const [active, setActive] = useState("All");
   const { ref, controls, variants } = useScrollAnimation();
@@ -203,7 +278,7 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Grid with fade-in per card */}
+        {}
         <motion.div
           layout
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"

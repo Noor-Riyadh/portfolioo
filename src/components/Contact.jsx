@@ -1,11 +1,19 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Send, Mail, Phone, MapPin } from "lucide-react";
+import emailjs from "@emailjs/browser";
 import { useScrollAnimation } from "../hooks/useScrollAnimation";
+
+// Your EmailJS credentials
+const SERVICE_ID = "service_s1hfinz";
+const TEMPLATE_ID = "template_tjg0f9x";
+const PUBLIC_KEY = "RZ2f1xFe800Sn-an0";
 
 export default function Contact() {
   const { ref, controls, variants } = useScrollAnimation();
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [form, setForm] = useState({
     first: "",
     last: "",
@@ -14,10 +22,37 @@ export default function Contact() {
     message: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSent(true);
-    setTimeout(() => setSent(false), 3000);
+    setLoading(true);
+    setError(false);
+
+    try {
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          from_name: `${form.first} ${form.last}`,
+          from_email: form.email,
+          phone: form.phone,
+          message: form.message,
+        },
+        PUBLIC_KEY,
+      );
+
+      setSent(true);
+      setForm({ first: "", last: "", email: "", phone: "", message: "" });
+      setTimeout(() => setSent(false), 4000);
+      // } catch (err) {
+      //   console.error("EmailJS error:", err);
+      //   setError(true);
+    } catch (err) {
+      console.error("EmailJS error:", err.text || err.message || err);
+      setError(true);
+      setTimeout(() => setError(false), 4000);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,17 +99,9 @@ export default function Contact() {
             className="lg:col-span-2 flex flex-col gap-6"
           >
             {[
-              { icon: Mail, label: "Email", val: "noor@design.io" },
+              { icon: Mail, label: "Email", val: "noorriyadh146@gmail.com" },
               { icon: Phone, label: "Phone", val: "+1 (234) 567-8901" },
               { icon: MapPin, label: "Location", val: "San Francisco, CA" },
-              // ].map(({ icon: Icon, label, val }) => (
-              //   <div
-              //     key={label}
-              //     className="glass border border-white/8 rounded-2xl p-5 flex items-center gap-4 hover:border-purple-500/30 transition-colors"
-              //   >
-              //     <div className="w-11 h-11 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
-              //       <Icon size={18} className="text-glow" />
-              //     </div>
             ].map(({ icon: ContactIcon, label, val }) => (
               <div
                 key={label}
@@ -141,17 +168,55 @@ export default function Contact() {
               onChange={(e) => setForm({ ...form, message: e.target.value })}
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm font-body text-white placeholder-white/30 focus:outline-none focus:border-purple-500/60 transition-colors resize-none"
             />
+
+            {/* Success message */}
+            {sent && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-green-500/10 border border-green-500/30 rounded-xl px-4 py-3 text-green-400 text-sm font-body"
+              >
+                ✓ Message sent successfully! I'll get back to you soon.
+              </motion.div>
+            )}
+
+            {/* Error message */}
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm font-body"
+              >
+                ✗ Something went wrong. Please try again.
+              </motion.div>
+            )}
+
             <motion.button
               type="submit"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="flex items-center gap-2 px-8 py-3 rounded-full bg-primary hover:bg-accent transition-colors font-body font-medium shadow-xl shadow-primary/30"
+              disabled={loading}
+              whileHover={{ scale: loading ? 1 : 1.02 }}
+              whileTap={{ scale: loading ? 1 : 0.98 }}
+              className="flex items-center gap-2 px-8 py-3 rounded-full bg-primary hover:bg-accent transition-colors font-body font-medium shadow-xl shadow-primary/30 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {sent ? (
+              {loading ? (
+                <>
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
+                    className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
+                  />
+                  Sending...
+                </>
+              ) : sent ? (
                 "Sent! ✓"
               ) : (
                 <>
-                  <Send size={16} /> Send Message
+                  <Send size={16} />
+                  Send Message
                 </>
               )}
             </motion.button>
