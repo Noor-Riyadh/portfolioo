@@ -14,6 +14,8 @@ export default function Contact() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [newsletter, setNewsletter] = useState("");
+  const [newsletterSent, setNewsletterSent] = useState(false);
   const [form, setForm] = useState({
     first: "",
     last: "",
@@ -238,14 +240,46 @@ export default function Contact() {
             <p className="text-gray-500 font-body text-sm mt-1">
               Never miss latest updates — design tips, project launches & more.
             </p>
+            {/* Success message */}
+            {newsletterSent && (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-green-600 text-sm font-body mt-2 font-medium"
+              >
+                ✓ Subscribed successfully! Check your inbox.
+              </motion.p>
+            )}
           </div>
           <div className="flex w-full md:w-auto gap-3">
             <input
               type="email"
               placeholder="Email Address"
+              value={newsletter}
+              onChange={(e) => setNewsletter(e.target.value)}
               className="flex-1 md:w-64 px-4 py-3 rounded-full border border-gray-200 text-sm font-body text-gray-700 focus:outline-none focus:border-violet-400 bg-gray-50"
             />
-            <button className="px-6 py-3 rounded-full bg-primary hover:bg-accent text-white text-sm font-body font-medium transition-colors whitespace-nowrap shadow-lg shadow-primary/30">
+            <button
+              onClick={async () => {
+                if (!newsletter) return;
+                try {
+                  await emailjs.send(
+                    SERVICE_ID,
+                    "template_lzym3i9",
+                    {
+                      subscriber_email: newsletter,
+                    },
+                    PUBLIC_KEY,
+                  );
+                  setNewsletterSent(true);
+                  setNewsletter("");
+                  setTimeout(() => setNewsletterSent(false), 5000);
+                } catch (err) {
+                  console.error("Newsletter error:", err);
+                }
+              }}
+              className="px-6 py-3 rounded-full bg-primary hover:bg-accent text-white text-sm font-body font-medium transition-colors whitespace-nowrap shadow-lg shadow-primary/30"
+            >
               Subscribe
             </button>
           </div>
