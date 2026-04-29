@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { Globe, GitBranch, Mail } from "lucide-react";
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer
       className="relative py-10 border-t border-white/5"
@@ -14,7 +16,7 @@ export default function Footer() {
           <span className="text-white/30">.</span>
         </span>
         <p className="text-white/30 text-xs font-body">
-          © 2026 Noor. All Rights Reserved.
+          © {currentYear} Noor. All Rights Reserved.
         </p>
         <div className="flex gap-3">
           {[
