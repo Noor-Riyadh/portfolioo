@@ -1,6 +1,7 @@
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Download } from "lucide-react"; // Fixed duplicate imports
 
 const links = ["Home", "Skills", "Projects", "Contact"];
 
@@ -34,7 +35,6 @@ export default function Navbar() {
         <ul className="hidden md:flex items-center gap-8">
           {links.map((l) => (
             <li key={l}>
-              {}
               <a
                 href={`#${l.toLowerCase()}`}
                 className="text-sm text-white/60 hover:text-white transition-colors duration-200 font-body tracking-wide"
@@ -45,14 +45,25 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {}
-        {}
-        <a
-          href="#contact"
-          className="hidden md:inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium bg-primary hover:bg-accent transition-colors duration-200 shadow-lg shadow-primary/30"
-        >
-          Let's Connect
-        </a>
+        <div className="hidden md:flex items-center gap-4">
+          {/* CV Download Button - Added missing <a> tag */}
+          <a
+            href="/portfolio/public/NoorRiyadh_CV.pdf"
+            download="NoorRiyadh_CV.pdf"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium glass border border-white/10 hover:border-purple-500/40 text-white/70 hover:text-white transition-all duration-200"
+          >
+            <Download size={14} />
+            Download CV
+          </a>
+
+          {}
+          <a
+            href="#contact"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium bg-primary hover:bg-accent transition-colors duration-200 shadow-lg shadow-primary/30"
+          >
+            Let's Connect
+          </a>
+        </div>
 
         {/* Mobile toggle */}
         <button
@@ -75,7 +86,6 @@ export default function Navbar() {
             <ul className="flex flex-col px-6 py-4 gap-4">
               {links.map((l) => (
                 <li key={l}>
-                  {}
                   <a
                     href={`#${l.toLowerCase()}`}
                     onClick={() => setOpen(false)}
@@ -86,7 +96,6 @@ export default function Navbar() {
                 </li>
               ))}
               <li>
-                {}
                 <a
                   href="#contact"
                   onClick={() => setOpen(false)}
